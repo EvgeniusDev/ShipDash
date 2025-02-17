@@ -1,6 +1,7 @@
 package com.litesoft.shipdash;
 
 import processing.core.PApplet;
+import processing.event.MouseEvent;
 
 public class Main extends PApplet {
     Scene currentScene;
@@ -16,13 +17,12 @@ public class Main extends PApplet {
 
     @Override
     public void setup() {
-
+        currentScene = new EditorScene(this, 16, 16, 32);
     }
 
     @Override
     public void draw() {
         background(255);
-        currentScene.control();
         currentScene.update();
         currentScene.draw();
     }
@@ -35,5 +35,20 @@ public class Main extends PApplet {
     @Override
     public void mouseReleased() {
         currentScene.mouseUp();
+    }
+
+    @Override
+    public void mouseWheel(MouseEvent event) {
+        currentScene.mouseWheel(event);
+    }
+
+    @Override
+    public void keyPressed() {
+        currentScene.keyDown();
+    }
+
+    @Override
+    public void keyReleased() {
+        currentScene.keyUp();
     }
 }

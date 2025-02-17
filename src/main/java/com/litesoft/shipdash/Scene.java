@@ -1,5 +1,7 @@
 package com.litesoft.shipdash;
 
+import processing.event.MouseEvent;
+
 public abstract class Scene {
     protected Main app;
 
@@ -11,7 +13,11 @@ public abstract class Scene {
 
     }
 
-    public void control() {
+    public void keyDown() {
+
+    }
+
+    public void keyUp() {
 
     }
 
@@ -20,6 +26,10 @@ public abstract class Scene {
     }
 
     public void mouseUp() {
+
+    }
+
+    public void mouseWheel(MouseEvent event) {
 
     }
 
