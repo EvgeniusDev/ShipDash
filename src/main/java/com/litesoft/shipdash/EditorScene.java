@@ -36,10 +36,10 @@ public class EditorScene extends Scene {
     public void update() {
         super.update();
 
-        cursorX = app.mouseX;
-        cursorY = app.mouseY;
-        lastCursorX = app.pmouseX;
-        lastCursorY = app.pmouseY;
+        cursorX = (app.mouseX - editorCamera.x) / editorCamera.scale;
+        cursorY = (app.mouseY - editorCamera.y) / editorCamera.scale;
+        lastCursorX = (app.pmouseX - editorCamera.x) / editorCamera.scale;
+        lastCursorY = (app.pmouseY - editorCamera.y) / editorCamera.scale;
 
         if (app.mousePressed && app.mouseButton == Main.RIGHT) {
             editorCamera.drag();
@@ -100,7 +100,7 @@ public class EditorScene extends Scene {
                 }
 
                 app.fill(255, 0, 0);
-                app.rect(x *= tileSize, y *= tileSize, tileSize, tileSize);
+                app.rect(x * tileSize, y * tileSize, tileSize, tileSize);
             }
         }
     }
