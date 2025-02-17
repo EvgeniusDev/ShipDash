@@ -46,8 +46,8 @@ public class EditorScene extends Scene {
         }
 
         if (app.mousePressed && app.mouseButton == Main.LEFT) {
-            int x = (int) (cursorX / sizeX);
-            int y = (int) (cursorY / sizeY);
+            int x = (int) (cursorX / tileSize);
+            int y = (int) (cursorY / tileSize);
             app.println(x);
 
             if (x >= 0 && x < mapWidth && y >= 0 && y < mapHeight) {
