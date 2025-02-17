@@ -1,6 +1,5 @@
 package com.litesoft.shipdash;
 
-import processing.core.PApplet;
 import processing.event.MouseEvent;
 
 public class EditorScene extends Scene {
@@ -16,10 +15,11 @@ public class EditorScene extends Scene {
     float lastCursorX;
     float lastCursorY;
 
-    Camera camera;
+    EditorCamera editorCamera;
 
     public EditorScene(Main app, int mapWidth, int mapHeight, float tileSize) {
         super(app);
+
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
         this.tileSize = tileSize;
@@ -27,7 +27,9 @@ public class EditorScene extends Scene {
         sizeX = mapWidth * tileSize;
         sizeY = mapHeight * tileSize;
         map = new int[mapWidth][mapHeight];
-        camera = new Camera(app);
+        editorCamera = new EditorCamera(app);
+
+        map[15][15]=1;
     }
 
     @Override
@@ -40,7 +42,17 @@ public class EditorScene extends Scene {
         lastCursorY = app.pmouseY;
 
         if (app.mousePressed && app.mouseButton == Main.RIGHT) {
-            camera.drag();
+            editorCamera.drag();
+        }
+
+        if (app.mousePressed && app.mouseButton == Main.LEFT) {
+            int x = (int) (cursorX / sizeX);
+            int y = (int) (cursorY / sizeY);
+            app.println(x);
+
+            if (x >= 0 && x < mapWidth && y >= 0 && y < mapHeight) {
+                map[x][y] = 1;
+            }
         }
     }
 
@@ -49,33 +61,51 @@ public class EditorScene extends Scene {
         super.mouseDown();
 
         if (app.mouseButton == Main.RIGHT) {
-            camera.startDrag();
+            editorCamera.startDrag();
         }
     }
 
     @Override
     public void mouseUp() {
         super.mouseUp();
-        camera.endDrag();
+        editorCamera.endDrag();
     }
 
     @Override
     public void mouseWheel(MouseEvent event) {
         super.mouseWheel(event);
-        camera.scaleBy(event.getCount() == -1 ? -0.1f : 0.1f);
+        editorCamera.scaleBy(event.getCount() == -1 ? -0.1f : 0.1f);
     }
 
     @Override
     public void draw() {
         super.draw();
 
-        camera.begin();
-        camera.update();
+        editorCamera.begin();
+        editorCamera.update();
+        drawMap();
         drawGrid();
-        camera.end();
+        editorCamera.end();
     }
 
-    private void drawGrid() {
+    void drawMap() {
+        app.noStroke();
+
+        for (int x=0; x<mapWidth; x++) {
+            for (int y=0; y<mapHeight; y++) {
+                int num = map[x][y];
+
+                if (num == 0) {
+                    continue;
+                }
+
+                app.fill(255, 0, 0);
+                app.rect(x *= tileSize, y *= tileSize, tileSize, tileSize);
+            }
+        }
+    }
+
+    void drawGrid() {
         app.stroke(80);
 
         for (float x=0; x<sizeX + tileSize; x+=tileSize) {
