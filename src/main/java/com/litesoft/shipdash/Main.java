@@ -17,7 +17,7 @@ public class Main extends PApplet {
 
     @Override
     public void setup() {
-        currentScene = new EditorScene(this, 128, 32, 32, "level", true);
+        currentScene = new EditorScene(this, 128, 32, 32, "level");
     }
 
     @Override
