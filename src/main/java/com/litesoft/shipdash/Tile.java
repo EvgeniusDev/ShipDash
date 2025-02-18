@@ -8,5 +8,6 @@ public class Tile {
     public Tile(float mapX, float mapY) {
         this.x = mapX;
         this.y = mapY;
+        this.id = -1;
     }
 }

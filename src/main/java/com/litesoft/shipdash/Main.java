@@ -1,9 +1,14 @@
 package com.litesoft.shipdash;
 
 import processing.core.PApplet;
+import processing.core.PFont;
+import processing.core.PImage;
 import processing.event.MouseEvent;
 
 public class Main extends PApplet {
+    PFont baseFont;
+    PFont titleFont;
+    PImage spaceImage;
     Scene currentScene;
 
     public static void main(String[] args) {
@@ -17,12 +22,17 @@ public class Main extends PApplet {
 
     @Override
     public void setup() {
+        baseFont = createFont("data/Wadik.otf", 18);
+        titleFont = createFont("data/Stage Wanders.ttf", 64);
+        spaceImage = loadImage("data/space.png");
         currentScene = new EditorScene(this, 128, 32, 32, "level");
     }
 
     @Override
     public void draw() {
         background(255);
+        imageMode(CORNER);
+        image(spaceImage, 0, 0, width, height);
         currentScene.update();
         currentScene.draw();
     }

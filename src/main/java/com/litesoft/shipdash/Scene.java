@@ -2,17 +2,21 @@ package com.litesoft.shipdash;
 
 import processing.event.MouseEvent;
 
+import java.util.ArrayList;
+
 public abstract class Scene {
     Main app;
     boolean[] pressedKeys = new boolean[2000];
     boolean[] pressedKeyCodes = new boolean[2000];
 
+    ArrayList<Button> buttons = new ArrayList<>();
+
     public Scene(Main app) {
         this.app = app;
     }
 
-    public void update() {
-
+    void addButton(Button button) {
+        buttons.add(button);
     }
 
     public void keyDown() {
@@ -36,18 +40,32 @@ public abstract class Scene {
     }
 
     public void mouseDown() {
-
+        for (Button btn : buttons) {
+            if (btn.checkPressed()) {
+                break;
+            }
+        }
     }
 
     public void mouseUp() {
-
+        for (Button btn : buttons) {
+            btn.endPressed();
+        }
     }
 
     public void mouseWheel(MouseEvent event) {
 
     }
 
-    public void draw() {
+    public void update() {
+        for (Button btn : buttons) {
+            btn.update();
+        }
+    }
 
+    public void draw() {
+        for (Button btn : buttons) {
+            btn.draw();
+        }
     }
 }
