@@ -1,6 +1,10 @@
 package com.litesoft.shipdash;
 
+import processing.data.JSONArray;
+import processing.data.JSONObject;
 import processing.event.MouseEvent;
+
+import java.io.File;
 
 public class EditorScene extends Scene {
     int mapWidth;
@@ -17,19 +21,23 @@ public class EditorScene extends Scene {
 
     EditorCamera editorCamera;
 
-    public EditorScene(Main app, int mapWidth, int mapHeight, float tileSize) {
-        super(app);
+    String levelName;
 
+    public EditorScene(Main app, int mapWidth, int mapHeight, float tileSize, String levelName, boolean load) {
+        super(app);
+        this.tileSize = tileSize;
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
-        this.tileSize = tileSize;
+        this.levelName = "data/" + levelName + ".json";
 
         sizeX = mapWidth * tileSize;
         sizeY = mapHeight * tileSize;
-        map = new int[mapWidth][mapHeight];
+        map = new int[mapHeight][mapWidth];
         editorCamera = new EditorCamera(app);
 
-        map[15][15]=1;
+        if (load) {
+            loadLevel();
+        }
     }
 
     @Override
@@ -48,10 +56,9 @@ public class EditorScene extends Scene {
         if (app.mousePressed && app.mouseButton == Main.LEFT) {
             int x = (int) (cursorX / tileSize);
             int y = (int) (cursorY / tileSize);
-            app.println(x);
 
             if (x >= 0 && x < mapWidth && y >= 0 && y < mapHeight) {
-                map[x][y] = 1;
+                map[y][x] = 1;
             }
         }
     }
@@ -78,6 +85,13 @@ public class EditorScene extends Scene {
     }
 
     @Override
+    public void keyDown() {
+        if (app.key == 's') {
+            saveLevel();
+        }
+    }
+
+    @Override
     public void draw() {
         super.draw();
 
@@ -91,9 +105,9 @@ public class EditorScene extends Scene {
     void drawMap() {
         app.noStroke();
 
-        for (int x=0; x<mapWidth; x++) {
-            for (int y=0; y<mapHeight; y++) {
-                int num = map[x][y];
+        for (int y=0; y<mapHeight; y++) {
+            for (int x=0; x<mapWidth; x++) {
+                int num = map[y][x];
 
                 if (num == 0) {
                     continue;
@@ -114,6 +128,38 @@ public class EditorScene extends Scene {
 
         for (float y=0; y<sizeY + tileSize; y+=tileSize) {
             app.line(0, y, sizeX, y);
+        }
+    }
+
+    void saveLevel() {
+        var json = new JSONObject();
+        var array = new JSONArray();
+        int index = 0;
+
+        for (int y=0; y<mapHeight; y++) {
+            for (int x=0; x<mapWidth; x++) {
+                array.setInt(index++, map[y][x]);
+            }
+        }
+
+        json.setJSONArray("map", array);
+        json.setInt("width", mapWidth);
+        json.setInt("height", mapHeight);
+        app.saveJSONObject(json, levelName);
+    }
+
+    void loadLevel() {
+        var json = app.loadJSONObject(levelName);
+        var array = json.getJSONArray("map");
+
+        mapWidth = json.getInt("width");
+        mapHeight = json.getInt("height");
+        sizeX = mapWidth * tileSize;
+        sizeY = mapHeight * tileSize;
+        map = new int[mapHeight][mapWidth];
+
+        for (int i=0; i<array.size(); i++) {
+            map[i/mapWidth][i%mapWidth] = array.getInt(i);
         }
     }
 }
