@@ -11,6 +11,8 @@ public class Main extends PApplet {
     PImage spaceImage;
     Scene currentScene;
 
+    public static boolean[] isKeyPressed = new boolean[300];
+
     public static void main(String[] args) {
         PApplet.main("com.litesoft.shipdash.Main");
     }
@@ -18,6 +20,7 @@ public class Main extends PApplet {
     @Override
     public void settings() {
         size(960, 720);
+        //fullScreen();
     }
 
     @Override
@@ -25,7 +28,8 @@ public class Main extends PApplet {
         baseFont = createFont("data/Wadik.otf", 18);
         titleFont = createFont("data/Stage Wanders.ttf", 64);
         spaceImage = loadImage("data/space.png");
-        currentScene = new EditorScene(this, 128, 32, 32, "level");
+        //currentScene = new EditorScene(this, 128, 32, 32, "level");
+        currentScene = new GameScene(this, 128, 32, 32, "level");
     }
 
     @Override
@@ -55,10 +59,12 @@ public class Main extends PApplet {
     @Override
     public void keyPressed() {
         currentScene.keyDown();
+        isKeyPressed[key] = true;
     }
 
     @Override
     public void keyReleased() {
         currentScene.keyUp();
+        isKeyPressed[key] = false;
     }
 }
