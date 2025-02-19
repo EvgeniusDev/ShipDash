@@ -19,12 +19,13 @@ public class Main extends PApplet {
 
     @Override
     public void settings() {
-        size(960, 720);
+        size(920, 920);
         //fullScreen();
     }
 
     @Override
     public void setup() {
+
         baseFont = createFont("data/Wadik.otf", 18);
         titleFont = createFont("data/Stage Wanders.ttf", 64);
         spaceImage = loadImage("data/space.png");
